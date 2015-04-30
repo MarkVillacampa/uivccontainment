@@ -39,8 +39,10 @@ class VCParent < UIViewController
     fromVC.willMoveToParentViewController(nil)
     self.addChildViewController(toVC)
 
-    animator = Animator.new
 
+    index_from = self.viewControllers.index(fromVC)
+    index_to = self.viewControllers.index(toVC)
+    animator = Animator.new(direction: index_from > index_to ? :left : :right)
     context = PrivateTransitionContext.new(fromVC, toVC)
 
     context.animated = true

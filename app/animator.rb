@@ -1,17 +1,32 @@
 class Animator
+  attr_accessor :direction
+
+  def initialize(opts)
+    self.direction = opts[:direction]
+  end
+
   def transitionDuration(context)
     0.5
   end
 
   def animateTransition(context)
+    if self.direction == :right
+      toVC_x_start = -150
+      fromVC_x_mid = -200
+      toVC_x_mid = 100
+    else
+      toVC_x_start = 150
+      fromVC_x_mid = 200
+      toVC_x_mid = -100
+    end
+
     toVC = context.viewControllerForKey(:toVC)
     fromVC = context.viewControllerForKey(:fromVC)
     context.containerView.insertSubview(toVC.view, belowSubview:fromVC.view)
 
     toVC.view.alpha = 0
     toVC.view.transform = CGAffineTransformTranslate(
-      CGAffineTransformMakeScale(0.7, 0.7), -150, 0)
-
+      CGAffineTransformMakeScale(0.7, 0.7), toVC_x_start, 0)
 
     UIView.animateKeyframesWithDuration(self.transitionDuration(context),
       delay:0.0,
@@ -22,12 +37,12 @@ class Animator
           animations: lambda {
             fromVC.view.transform = CGAffineTransformConcat(
               CGAffineTransformMakeScale(0.9, 0.9),
-              CGAffineTransformMakeTranslation(-200, 0))
+              CGAffineTransformMakeTranslation(fromVC_x_mid, 0))
             fromVC.view.alpha = 0.5
 
             toVC.view.transform = CGAffineTransformConcat(
               CGAffineTransformMakeScale(0.9, 0.9),
-              CGAffineTransformMakeTranslation(100, 0))
+              CGAffineTransformMakeTranslation(toVC_x_mid, 0))
             toVC.view.alpha = 0.5
           })
 
